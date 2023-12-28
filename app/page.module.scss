@@ -1,0 +1,24 @@
+.container {
+  > .title {
+    text-align: center;
+    padding: 32px;
+  }
+
+  > .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+
+    > .form {
+      background: #efefef;
+      width: 300px;
+      height: 300px;
+    }
+
+    > .plot {
+      width: 300px;
+      height: 300px;
+    }
+  }
+}
