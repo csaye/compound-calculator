@@ -34,10 +34,7 @@ export default function Index() {
               datasets: [
                 {
                   label: 'Test data',
-                  data: Array.from({ length: 10 }).map(() => ({
-                    x: Math.random(),
-                    y: Math.random(),
-                  })),
+                  data: getData(),
                   backgroundColor: 'rgba(255, 99, 132, 1)',
                   animation: false,
                 },
@@ -46,12 +43,18 @@ export default function Index() {
             options={{
               scales: {
                 x: {
+                  title: {
+                    display: true,
+                    text: 'Years',
+                  },
                   min: 0,
-                  max: 1,
+                  max: totalYears ?? 0,
                 },
                 y: {
                   min: 0,
-                  max: 1,
+                  ticks: {
+                    format: { style: 'currency', currency: 'USD' },
+                  },
                 },
               },
             }}
@@ -60,6 +63,38 @@ export default function Index() {
       </div>
     </div>
   )
+
+  function getData() {
+    if (totalYears === null || startingAmount === null) return
+
+    let x = 0
+    let y = startingAmount
+    const data = [{ x: 0, y }]
+
+    for (let day = 1; day <= totalYears * 365; day++) {
+      x = day / 365
+      if (dailyInterest) y *= 1 + dailyInterest
+      if (dailyAddition) y += dailyAddition
+
+      if (day % 7 === 0) {
+        if (weeklyInterest) y *= 1 + weeklyInterest
+        if (weeklyAddition) y += weeklyAddition
+      }
+
+      if (day % 30 === 0) {
+        if (monthlyInterest) y *= 1 + monthlyInterest
+        if (monthlyAddition) y += monthlyAddition
+        data.push({ x, y })
+      }
+
+      if (day % 365 === 0) {
+        if (yearlyInterest) y *= 1 + yearlyInterest
+        if (yearlyAddition) y += yearlyAddition
+      }
+    }
+
+    return data
+  }
 
   function renderForm() {
     return (
@@ -70,8 +105,13 @@ export default function Index() {
             placeholder='Starting amount'
             onChange={setStartingAmount}
           />
-          <NumberInput placeholder='Total years' onChange={setTotalYears} />
+          <NumberInput
+            max={100}
+            placeholder='Total years'
+            onChange={setTotalYears}
+          />
         </div>
+        <p>Deposits</p>
         <div>
           <NumberInput
             format='money'
@@ -94,6 +134,7 @@ export default function Index() {
             onChange={setYearlyAddition}
           />
         </div>
+        <p>Interest</p>
         <div>
           <NumberInput
             format='percent'

@@ -9,11 +9,30 @@
     align-items: center;
     justify-content: center;
     gap: 32px;
+    flex-wrap: wrap;
 
     > .form {
       background: #efefef;
       width: 300px;
       height: 300px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+
+      > p {
+        margin-bottom: 4px;
+        margin-top: 16px;
+      }
+
+      > div {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+
+        > input {
+          width: calc(50% - 2px);
+        }
+      }
     }
 
     > .plot {

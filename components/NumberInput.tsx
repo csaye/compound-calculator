@@ -2,11 +2,17 @@ import { DetailedHTMLProps, InputHTMLAttributes, useState } from 'react'
 
 type Props = {
   format?: 'money' | 'percent'
+  max?: number
   onChange: (value: number | null) => void
   placeholder?: string
 }
 
-export function NumberInput({ format, onChange, placeholder }: Props) {
+export function NumberInput({
+  format,
+  max = format === 'percent' ? 100 : 1_000_000_000,
+  onChange,
+  placeholder,
+}: Props) {
   const [rawString, setRawString] = useState('')
 
   return (
@@ -22,10 +28,10 @@ export function NumberInput({ format, onChange, placeholder }: Props) {
     // ignore trailing % if deleting from end
     if (rawString.endsWith('%') && !rawInput.includes('%')) {
       sanitizedInput = sanitizedInput.slice(0, -1)
-      console.log(sanitizedInput)
     }
 
-    const num = Number(sanitizedInput)
+    let num = Number(sanitizedInput)
+    if (max && num > max) num = max
 
     if (!sanitizedInput || isNaN(num)) {
       if (rawString) {
