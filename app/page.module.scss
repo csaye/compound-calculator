@@ -1,7 +1,13 @@
 .container {
+  padding: 32px;
+
   > .title {
     text-align: center;
-    padding: 32px;
+    margin-bottom: 32px;
+
+    > h1 {
+      margin-bottom: 8px;
+    }
   }
 
   > .content {

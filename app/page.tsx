@@ -25,6 +25,13 @@ export default function Index() {
     <div className={styles.container}>
       <div className={styles.title}>
         <h1>Compound Interest Calculator</h1>
+        <a
+          href='https://github.com/csaye/compound-calculator'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          github.com/csaye/compound-calculator
+        </a>
       </div>
       <div className={styles.content}>
         {renderForm()}
@@ -166,17 +173,23 @@ export default function Index() {
             onChange={setYearlyInterest}
           />
         </div>
-        {total !== null && (
-          <p>
-            ={' '}
-            {total.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-            })}
-            <br />
-            after {totalYears} {totalYears === 1 ? 'year' : 'years'}
-          </p>
+        {startingAmount === null ? (
+          <p>Missing starting amount</p>
+        ) : totalYears === null ? (
+          <p>Missing total years</p>
+        ) : (
+          total !== null && (
+            <p>
+              ={' '}
+              {total.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+              })}
+              <br />
+              after {totalYears} {totalYears === 1 ? 'year' : 'years'}
+            </p>
+          )
         )}
       </div>
     )
