@@ -79,21 +79,21 @@ export default function Index() {
 
     for (let day = 1; day <= totalYears * 365; day++) {
       x = day / 365
-      if (dailyInterest) y *= 1 + dailyInterest
+      if (dailyInterest) y *= 1 + dailyInterest / 100
       if (dailyAddition) y += dailyAddition
 
       if (day % 7 === 0) {
-        if (weeklyInterest) y *= 1 + weeklyInterest
+        if (weeklyInterest) y *= 1 + weeklyInterest / 100
         if (weeklyAddition) y += weeklyAddition
       }
 
       if (day % 30 === 0) {
-        if (monthlyInterest) y *= 1 + monthlyInterest
+        if (monthlyInterest) y *= 1 + monthlyInterest / 100
         if (monthlyAddition) y += monthlyAddition
       }
 
       if (day % 365 === 0) {
-        if (yearlyInterest) y *= 1 + yearlyInterest
+        if (yearlyInterest) y *= 1 + yearlyInterest / 100
         if (yearlyAddition) y += yearlyAddition
       }
 
