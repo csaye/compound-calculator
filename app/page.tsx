@@ -1,11 +1,11 @@
 'use client'
-import { Chart, LinearScale, PointElement } from 'chart.js'
+import { Chart, LinearScale, PointElement, Tooltip } from 'chart.js'
 import { Scatter } from 'react-chartjs-2'
 import styles from './page.module.scss'
 import { useState } from 'react'
 import { NumberInput } from '@/components/NumberInput'
 
-Chart.register(LinearScale, PointElement)
+Chart.register(LinearScale, PointElement, Tooltip)
 
 export default function Index() {
   const [startingAmount, setStartingAmount] = useState<number | null>(null)
@@ -18,6 +18,8 @@ export default function Index() {
   const [weeklyInterest, setWeeklyInterest] = useState<number | null>(null)
   const [monthlyInterest, setMonthlyInterest] = useState<number | null>(null)
   const [yearlyInterest, setYearlyInterest] = useState<number | null>(null)
+
+  const [data, total] = getData()
 
   return (
     <div className={styles.container}>
@@ -33,14 +35,18 @@ export default function Index() {
             data={{
               datasets: [
                 {
-                  label: 'Test data',
-                  data: getData(),
-                  backgroundColor: 'rgba(255, 99, 132, 1)',
+                  data,
+                  backgroundColor: '#85bb65',
                   animation: false,
                 },
               ],
             }}
             options={{
+              plugins: {
+                tooltip: {
+                  mode: 'nearest',
+                },
+              },
               scales: {
                 x: {
                   title: {
@@ -64,8 +70,8 @@ export default function Index() {
     </div>
   )
 
-  function getData() {
-    if (totalYears === null || startingAmount === null) return
+  function getData(): [{ x: number; y: number }[], number | null] {
+    if (totalYears === null || startingAmount === null) return [[], null]
 
     let x = 0
     let y = startingAmount
@@ -84,16 +90,19 @@ export default function Index() {
       if (day % 30 === 0) {
         if (monthlyInterest) y *= 1 + monthlyInterest
         if (monthlyAddition) y += monthlyAddition
-        data.push({ x, y })
       }
 
       if (day % 365 === 0) {
         if (yearlyInterest) y *= 1 + yearlyInterest
         if (yearlyAddition) y += yearlyAddition
       }
+
+      if (day % 73 === 0) {
+        data.push({ x, y })
+      }
     }
 
-    return data
+    return [data, y]
   }
 
   function renderForm() {
@@ -157,6 +166,18 @@ export default function Index() {
             onChange={setYearlyInterest}
           />
         </div>
+        {total !== null && (
+          <p>
+            ={' '}
+            {total.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+            })}
+            <br />
+            after {totalYears} {totalYears === 1 ? 'year' : 'years'}
+          </p>
+        )}
       </div>
     )
   }

@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, InputHTMLAttributes, useState } from 'react'
+import { useState } from 'react'
 
 type Props = {
   format?: 'money' | 'percent'
